@@ -3,21 +3,136 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="styles5.css">
     <title>玲美ちゃんの練習スケジュール</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #fff0f5;
+            font-family: 'Hiragino Kaku Gothic Pro', 'Meiryo', sans-serif;
+        }
+        .container {
+            max-width: 500px;
+        }
+        h1 {
+            color: #ff69b4;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+        .calendar-card {
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(255, 105, 180, 0.15);
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .calendar-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(255, 105, 180, 0.2);
+        }
+        .calendar-header {
+            background-color: #ff69b4;
+            color: white;
+            padding: 20px;
+        }
+        .calendar-body {
+            padding: 30px;
+            height: 200px; /* 高さを固定 */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        #date {
+            font-size: 3rem;
+            font-weight: bold;
+            color: #ff69b4;
+        }
+        .small-text {
+            font-size: 1.25rem; /* フォントサイズを1.25remに調整 */
+            line-height: 1.3; /* 行間を調整 */
+            white-space: pre-line;
+            text-align: center;
+        }
+    </style>
 </head>
 <body>
-    <div class="container">
-        <h1>❤️玲美ちゃんの練習スケジュール❤️</h1>
-        <button id="dateButton" class="calendar-button">
-            <div class="calendar-top"></div>
-            <div class="calendar-bottom">
-                <div id="month"></div>
-                <div id="date"></div>
-                <div id="day"></div>
+    <div class="container mt-5">
+        <h1 class="text-center mb-4">玲美ちゃんの<br>練習スケジュール</h1>
+        <div class="calendar-card">
+            <div class="calendar-header">
+                <h2 class="text-center mb-0" id="year"></h2>
             </div>
-        </button>
+            <div class="calendar-body text-center">
+                <div id="month" class="h4"></div>
+                <div id="date" class="my-3"></div>
+                <div id="day" class="h5"></div>
+            </div>
+        </div>
     </div>
-    <script src="script5.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        window.onload = function() {
+            const yearElement = document.getElementById('year');
+            const monthElement = document.getElementById('month');
+            const dateElement = document.getElementById('date');
+            const dayElement = document.getElementById('day');
+            const calendarBody = document.querySelector('.calendar-body');
+
+            const today = new Date();
+            const year = today.getFullYear();
+            yearElement.innerText = `${year}年`;
+
+            const updateCalendar = (showDate) => {
+                if (showDate) {
+                    monthElement.innerText = today.toLocaleString('ja-JP', { month: 'long' });
+                    dateElement.innerText = today.getDate();
+                    dateElement.classList.remove('small-text');
+                    dayElement.innerText = today.toLocaleString('ja-JP', { weekday: 'long' });
+                } else {
+                    const monthDateKey = `${today.getMonth() + 1}-${today.getDate()}`;
+                    monthElement.innerText = '';
+                    dateElement.innerText = dynamicStrings[monthDateKey] || '練習なし！\n先輩とデートする日♡';
+                    dateElement.classList.add('small-text');
+                    dayElement.innerText = '';
+                }
+            };
+
+            const dynamicStrings = {
+                '8-26': '練習あるよ…\n昼休み→校庭',
+                '8-28': '練習あるよ…\n昼休み→校庭\n放課後→校庭',
+                '8-29': '練習あるよ…\n昼休み→総合教室',
+                '9-2': '練習あるよ…\n放課後→総合教室',
+                '9-4': '練習あるよ…\n放課後→校庭',
+                '9-5': '練習あるよ…\n昼休み→総合教室',
+                '9-9': '練習あるよ…\n昼休み→校庭\n放課後→校庭',
+                '9-11': '練習あるよ…\n放課後→校庭',
+                '9-13': '英検当日！\n頑張れ！',
+                '9-14': 'スピーチコンテスト',
+                '9-15': 'ルミデートの日♡',
+                '9-16': '練習なし！\n先輩バイト…',
+                '9-17': '練習なし！\n先輩バイト…',
+                '9-18': '練習なし！\n先輩バイト…',
+                '9-20': '練習なし！\nれみちゃんバイト…',
+                '9-21': '練習なし！\nれみちゃんバイト…',
+                '9-22': 'テスト勉強の日\n先輩バイト…',
+                '9-23': '学校休み！\n先輩大学…',
+                '9-25': 'テストの日\nがんばれ〜',
+                '9-26': '2年記念日！\nこれからもよろしくね♡',
+                '9-27': 'テストの日\nがんばれ〜',
+                '9-28': '2年記念日デート',
+                '9-29': 'バイトの日',
+                '9-30': '練習あるよ…\n昼休み→体育館',
+            };
+
+            let isDateVisible = true;
+            updateCalendar(isDateVisible);
+
+            calendarBody.onclick = function() {
+                isDateVisible = !isDateVisible;
+                updateCalendar(isDateVisible);
+            };
+        };
+    </script>
 </body>
 </html>
